@@ -25,6 +25,7 @@ class Resep extends RestController
   {
     parent::__construct();
     $this->load->model('resep_model');
+    $this->methods['index_get']['limit'] = 2;
   }
 
   public function index_get()
@@ -74,13 +75,13 @@ class Resep extends RestController
   {
     $data = [
       'nama_kuliner' => $this->post('nama_kuliner'),
-      'asal' => $this->post('asal'),
-      'kategori' => $this->post('kategori'),
-      'gambar' => $this->post('gambar'),
-      'durasi' => $this->post('durasi'),
-      'porsi' => $this->post('porsi'),
-      'bahan' => $this->post('bahan'),
-      'resep' => $this->post('resep'),
+      'asal' => $this->post('asal',true),
+      'kategori' => $this->post('kategori',true),
+      'gambar' => $this->post('gambar',true),
+      'durasi' => $this->post('durasi',true),
+      'porsi' => $this->post('porsi',true),
+      'bahan' => $this->post('bahan',true),
+      'resep' => $this->post('resep',true),
     ];
     $simpan= $this->resep_model->add($data);
     if ($simpan['status']) {
@@ -94,16 +95,16 @@ class Resep extends RestController
   public function index_put()
   {
     $data = [
-      'nama_kuliner' => $this->put('nama_kuliner'),
-      'asal' => $this->put('asal'),
-      'kategori' => $this->put('kategori'),
-      'gambar' => $this->put('gambar'),
-      'durasi' => $this->put('durasi'),
-      'porsi' => $this->put('porsi'),
-      'bahan' => $this->put('bahan'),
-      'resep' => $this->put('resep'),
+      'nama_kuliner' => $this->put('nama_kuliner',true),
+      'asal' => $this->put('asal',true),
+      'kategori' => $this->put('kategori',true),
+      'gambar' => $this->put('gambar',true),
+      'durasi' => $this->put('durasi',true),
+      'porsi' => $this->put('porsi',true),
+      'bahan' => $this->put('bahan',true),
+      'resep' => $this->put('resep',true),
     ];
-    $id = $this->put('id');
+    $id = $this->put('id',true);
     $simpan = $this->resep_model->update($id, $data);
     if ($simpan['status']) {
       # code...
