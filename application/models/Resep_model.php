@@ -25,13 +25,13 @@ class Resep_model extends CI_Model {
     parent::__construct();
   }
 
-  public function get($asal = null, $limit = 5, $offset = 0){
-    if ($asal === null) {
+  public function getdata($asal, $limit, $offset){
+    if ($asal == null) {
       # code...
-      return $this->db->get('resep')->result();
+      return $this->db->get('resep',$limit, $offset)->result();
     }else {
       # code...
-      return $this->db->get_where('resep',['asal' => $asal ])->result_array();
+      return $this->db->get_where('resep',['asal' => $asal])->result_array();
     }
   }
 

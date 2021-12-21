@@ -1,5 +1,8 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Headers: *');
+
 // Don't forget include/define REST_Controller path
 
 /**
@@ -18,6 +21,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
  *
  */
 use chriskacerguis\RestServer\RestController;
+
 class Resep extends RestController
 {
     
@@ -25,21 +29,21 @@ class Resep extends RestController
   {
     parent::__construct();
     $this->load->model('resep_model');
-    $this->methods['index_get']['limit'] = 2;
+    $this->methods['index_get']['limit'] = 1000;
   }
 
   public function index_get()
   {
     $asal = $this->get('asal');
+    $p = $this->get('page');
     if ($asal === null) {
       # code...
-      $p = $this->get('page');
       $p = (empty($p) ? 1 : $p);
       $total_data = $this->resep_model->count();
       $total_page = ceil($total_data / 5 );
       $start = ($p - 1) * 5;
 
-      $reseps = $this->resep_model->get(null, 5, $start);
+      $reseps = $this->resep_model->getdata($asal, 5, $start);
 
       if($reseps) {
         $data = [
@@ -60,7 +64,8 @@ class Resep extends RestController
     }else {
       # code...
       // print($asal);
-      $data = $this->resep_model->get($asal);
+      $start = ($p - 1) * 5;
+      $data = $this->resep_model->getdata($asal, 5,$start);
       if ($data) {
         # code...
         $this->response(['status'=>true,'data'=> $data],RestController::HTTP_OK);
