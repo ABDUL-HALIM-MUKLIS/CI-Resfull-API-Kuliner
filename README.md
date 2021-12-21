@@ -4,3 +4,7 @@
 
 1. Membuat request HTTP GET, POST, PUT, DELETE pada tabel resep
 2. Menerapkan keamanan berupa XSS Clean (terhadap inputan script), mengaktifkan API KEY, Membatasi akses pada tabel
+
+
+## Databse config
+1. Database pada projek ini bernama kuliner
