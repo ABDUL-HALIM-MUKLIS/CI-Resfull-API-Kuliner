@@ -2,6 +2,7 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Headers: *');
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 
 // Don't forget include/define REST_Controller path
 
@@ -35,15 +36,16 @@ class Resep extends RestController
   public function index_get()
   {
     $asal = $this->get('asal');
+    $id = $this->get('id');
     $p = $this->get('page');
-    if ($asal === null) {
+    if ($asal === null || $id === null) {
       # code...
       $p = (empty($p) ? 1 : $p);
       $total_data = $this->resep_model->count();
       $total_page = ceil($total_data / 5 );
       $start = ($p - 1) * 5;
 
-      $reseps = $this->resep_model->getdata($asal, 5, $start);
+      $reseps = $this->resep_model->getdata($asal,$id, 5, $start);
 
       if($reseps) {
         $data = [
@@ -65,7 +67,7 @@ class Resep extends RestController
       # code...
       // print($asal);
       $start = ($p - 1) * 5;
-      $data = $this->resep_model->getdata($asal, 5,$start);
+      $data = $this->resep_model->getdata($asal,$id, 5,$start);
       if ($data) {
         # code...
         $this->response(['status'=>true,'data'=> $data],RestController::HTTP_OK);
@@ -79,7 +81,7 @@ class Resep extends RestController
   public function index_post()
   {
     $data = [
-      'nama_kuliner' => $this->post('nama_kuliner'),
+      'nama_kuliner' => $this->post('nama_kuliner', true),
       'asal' => $this->post('asal',true),
       'kategori' => $this->post('kategori',true),
       'gambar' => $this->post('gambar',true),
@@ -91,7 +93,7 @@ class Resep extends RestController
     $simpan= $this->resep_model->add($data);
     if ($simpan['status']) {
       # code...
-      $this->response(['status' =>true, 'msg' =>$simpan['data']. ' Data tekah ditambahkan'], RestController::HTTP_CREATED);
+        $this->response(['status' =>true, 'msg' =>$simpan['data']. ' Data telah ditambahkan'], RestController::HTTP_CREATED);
     }else {
       $this->response(['status' => false, 'msg' => $simpan['msg']], RestController::HTTP_INTERNAL_ERROR);
     }
@@ -136,11 +138,10 @@ class Resep extends RestController
       $status = (int)$delete['data'];
       if ($status>0) {
         # code...
-
-        $this->response(['status' =>true, 'msg' =>$id. ' Data tekah dihapus'], RestController::HTTP_OK);
+        $this->response(['status' =>true, 'msg' =>'Data dengan id '.$id. ' Data tekah dihapus'], RestController::HTTP_OK);
       }else {
         # code...
-        $this->response(['status' =>true, 'msg' =>$id. ' Tidak ada data yang dihapus'], RestController::HTTP_BAD_REQUEST);
+        $this->response(['status' =>true, 'msg' =>$id. ' Tidak ada data yang dihapus','data'=>$delete], RestController::HTTP_BAD_REQUEST);
       }
     }else {
       $this->response(['status' => false, 'msg' => $delete['msg']], RestController::HTTP_INTERNAL_ERROR);
